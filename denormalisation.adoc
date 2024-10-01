@@ -1,0 +1,88 @@
+= MongoDB et dénormalisation
+:revealjs_theme: beige
+:source-highlighter: highlight.js
+:icons: font
+
+
+== Qu'est-ce que la dénormalisation ?
+
+La dénormalisation est une technique de conception de base de données qui consiste à stocker des données répétées ou redondantes ...
+
+=== ...
+
+dans une base de données afin d'améliorer les performances de lecture et de recherche, au détriment de l'efficacité de stockage. 
+
+
+=== MongoDB 
+
+MongoDB, étant une base de données NoSQL orientée document, prend en charge la dénormalisation lorsque cela est approprié pour les besoins de l'application.
+
+=== ...
+
+Quelques cas où la dénormalisation peut être utile avec MongoDB :
+
+
+== Lecture intensive 
+
+Si votre application effectue fréquemment des opérations de lecture, telles que des requêtes de recherche, ...
+
+=== ...
+
+sur un ensemble de données particulier, la dénormalisation peut être utilisée pour éviter d'avoir à joindre plusieurs collections. 
+
+[.green.background]
+=== Exemple
+
+Par exemple, au lieu de joindre une collection "Utilisateurs" avec une collection "Commentaires" ...
+
+=== ...
+
+pour obtenir le nom de l'utilisateur qui a laissé un commentaire, vous pouvez stocker le nom de l'utilisateur directement dans le document du commentaire.
+
+
+== Réduction du temps de réponse 
+
+La dénormalisation peut réduire considérablement le temps de réponse des requêtes, car elle évite les opérations coûteuses de jointure.
+
+
+== Réduction de la complexité
+
+La dénormalisation peut simplifier la structure de la base de données et le modèle de données, ce qui facilite la compréhension et la maintenance de la base de données.
+
+
+== Optimisation pour des cas d'utilisation spécifiques 
+
+Dans certains cas, il peut être plus efficace de stocker les données de manière dénormalisée pour répondre à des besoins de requête spécifiques. 
+
+[.green.background]
+=== Exemple
+
+Par exemple, si vous devez afficher les données sous une forme agrégée, il peut être judicieux de pré-agréger les données et de les stocker sous une forme dénormalisée.
+
+
+== Risque de la dénormalisation
+
+Cependant, il est important de noter que la dénormalisation peut également entraîner des compromis, notamment :
+
+[%step]
+* une utilisation plus importante de l'espace de stockage
+* une complexité accrue de la mise à jour des données
+* le risque de données incohérentes si les mises à jour ne sont pas gérées correctement.
+
+
+== Ce qu'il faut prendre en compte
+
+Lorsque vous choisissez de dénormaliser des données dans MongoDB, ... 
+
+=== ...
+
+vous devez prendre en compte les besoins spécifiques de votre application, les modèles de requête, les performances attendues et la fréquence des opérations de mise à jour. 
+
+
+== Les outils de MongoDB
+
+MongoDB offre des fonctionnalités puissantes pour la dénormalisation, telles que les tableaux et les sous-documents, qui permettent de stocker des données dénormalisées de manière structurée. 
+
+=== ...
+
+Il est essentiel de planifier soigneusement la dénormalisation pour éviter des problèmes potentiels à l'avenir.

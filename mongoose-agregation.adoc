@@ -1,0 +1,247 @@
+= Mongoose et les opérations d'agrégation
+:revealjs_theme: beige
+:source-highlighter: highlight.js
+:icons: font
+
+
+== Définition
+
+Mongoose est une bibliothèque Node.js qui facilite l'interaction avec les bases de données MongoDB. 
+
+Dans MongoDB, les opérations d'agrégation permettent de traiter et d'analyser les données de manière puissante et flexible. 
+
+
+== Agrégations via l'API de Mongoose
+
+Mongoose offre un moyen de créer des agrégations en utilisant son API.
+
+
+== Comment faire ?
+
+[.yellow.background]
+=== Importez Mongoose 
+Tout d'abord, assurez-vous d'avoir installé Mongoose et importez-le dans votre application Node.js.
+
+[source, javascript]
+----
+const mongoose = require('mongoose');
+----
+
+[.yellow.background]
+=== Définissez un schéma de modèle 
+
+Avant de pouvoir utiliser des agrégations, définissez un modèle Mongoose en utilisant un schéma qui correspond à votre collection MongoDB. 
+
+Cela permettra de spécifier la structure des données sur laquelle vous allez effectuer des opérations d'agrégation.
+
+[.green.background]
+=== Exemple
+
+[source, javascript]
+----
+const Schema = mongoose.Schema;
+
+const monSchema = new Schema({
+  nom: String,
+  age: Number,
+  // Autres champs
+});
+
+const MonModele = mongoose.model('MonModele', monSchema);
+----
+
+[.yellow.background]
+=== Utilisez la méthode aggregate 
+
+La méthode aggregate vous permet de définir et d'exécuter une opération d'agrégation sur les données de votre modèle. 
+
+Vous pouvez chaîner différentes étapes d'agrégation pour créer des pipelines d'agrégation complexes.
+
+[.green.background]
+=== Exemple
+Voici un exemple simple d'agrégation qui calcule la moyenne de la propriété "age" pour tous les documents de la collection :
+
+[source, javascript]
+----
+MonModele.aggregate([
+  {
+    $group: {
+      _id: null,
+      moyenneAge: { $avg: '$age' }
+    }
+  }
+])
+.exec((err, resultat) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+  console.log('Moyenne d\'âge :', resultat[0].moyenneAge);
+});
+----
+
+[.yellow.background]
+=== Observations
+
+Dans cet exemple, $group est une étape d'agrégation qui regroupe tous les documents en un seul groupe (car _id: null) et calcule la moyenne de la propriété "age" dans ce groupe.
+
+[.yellow.background]
+=== Exécutez l'agrégation 
+
+Utilisez la méthode exec pour exécuter l'opération d'agrégation. Elle prend une fonction de rappel qui sera appelée avec le résultat de l'agrégation.
+
+[.green.background]
+=== Exemple
+
+Ceci est un exemple très simple, mais vous pouvez créer des pipelines d'agrégation beaucoup plus complexes en utilisant d'autres opérateurs et étapes d'agrégation fournis par MongoDB, tout en profitant de la puissance de Mongoose pour interagir avec votre base de données MongoDB.
+
+[.red.background]
+=== Important
+
+IMPORTANT: N'oubliez pas de gérer les erreurs correctement dans vos opérations d'agrégation, car elles peuvent échouer pour diverses raisons, telles que des données incorrectes ou des erreurs de connexion à la base de données.
+
+
+
+== Les opérations de pipeline
+
+Les opérateurs de pipeline sont des outils puissants pour effectuer des opérations d'agrégation complexes dans MongoDB en utilisant Mongoose. 
+
+
+== Exemples
+
+Voici quelques-uns des opérateurs de pipeline fréquemment utilisés pour construire des pipelines d'agrégation :
+
+[.green.background]
+=== $match 
+
+Cet opérateur est utilisé pour filtrer les documents dans le pipeline en fonction de certaines conditions. 
+
+Il est similaire à la clause WHERE dans une instruction SQL. Par exemple, vous pouvez utiliser $match pour filtrer les documents où une certaine condition est vraie.
+
+[.green.background]
+=== Exemple
+
+[source, javascript]
+----
+{
+  $match: {
+    age: { $gte: 18 } // Filtre les documents où l'âge est supérieur ou égal à 18
+  }
+}
+----
+
+
+[.green.background]
+=== $group 
+
+Cet opérateur est utilisé pour regrouper les documents en fonction de certains critères et effectuer des calculs d'agrégation sur les groupes résultants. Vous l'avez vu dans l'exemple précédent pour calculer des moyennes.
+
+[.green.background]
+=== Exemple
+[source, javascript]
+----
+{
+  $group: {
+    _id: '$ville',
+    populationTotale: { $sum: '$population' } // Somme de la population par ville
+  }
+}
+----
+
+
+[.green.background]
+=== $project 
+
+Cet opérateur est utilisé pour spécifier quels champs doivent être inclus dans les documents de sortie de l'agrégation. Vous pouvez également ajouter de nouveaux champs calculés.
+
+[.green.background]
+=== Exemple
+[source, javascript]
+----
+{
+  $project: {
+    nom: 1,
+    age: 1,
+    ville: 1,
+    _id: 0 // Exclut le champ _id du résultat
+  }
+}
+----
+
+[.green.background]
+=== $sort 
+
+Cet opérateur est utilisé pour trier les documents de sortie de l'agrégation en fonction de certains critères.
+
+[source, javascript]
+----
+{
+  $sort: {
+    age: 1 // Trie les documents par âge croissant
+  }
+}
+----
+
+
+
+[.green.background]
+=== $limit 
+Cet opérateur est utilisé pour limiter le nombre de documents de sortie de l'agrégation à un certain nombre.
+
+[source, javascript]
+----
+{
+  $limit: 10 // Limite la sortie à 10 documents
+}
+----
+
+[.green.background]
+=== $skip 
+Cet opérateur est utilisé pour ignorer un certain nombre de documents de sortie de l'agrégation.
+
+[source, javascript]
+----
+{
+  $skip: 5 // Ignore les 5 premiers documents
+}
+----
+
+
+[.green.background]
+=== $unwind 
+
+Cet opérateur est utilisé pour dérouler (ou "décompact") un tableau contenu dans un document. Il crée une copie du document pour chaque élément du tableau déroulé.
+
+[source, javascript]
+----
+{
+  $unwind: '$tags' // Déroule le tableau "tags" dans les documents
+}
+----
+
+
+[.green.background]
+=== $lookup 
+
+Cet opérateur permet de fusionner les documents à partir de deux collections différentes, en utilisant un champ commun comme clé de jointure.
+
+[source, javascript]
+----
+{
+  $lookup: {
+    from: 'autreCollection',
+    localField: 'cléLocale',
+    foreignField: 'cléÉtrangère',
+    as: 'nomDuChampDeSortie'
+  }
+}
+----
+
+=== Remarque
+
+[NOTE]
+====
+Ces opérateurs sont souvent utilisés en combinaison pour construire des pipelines d'agrégation complexes pour répondre à des besoins spécifiques d'analyse de données dans MongoDB. 
+
+Vous pouvez également créer des agrégations personnalisées en utilisant des opérateurs et des étapes spécifiques à votre cas d'utilisation.
+====

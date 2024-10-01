@@ -1,0 +1,182 @@
+= Les méthodes du shell MongoDB
+:revealjs_theme: beige
+:source-highlighter: highlight.js
+:icons: font
+
+== Méthodes pour la gestion des bases de données
+
+.getSiblingDB(dbName): 
+****
+Permet d'accéder à une autre base de données sur le même serveur sans changer le contexte de la base de données actuelle.
+****
+
+.db.createCollection(name): 
+****
+Crée une nouvelle collection dans la base de données actuelle.
+****
+
+
+.db.dropDatabase(): 
+****
+Supprime la base de données actuelle.
+****
+
+
+.db.getCollection(name): 
+****
+Retourne une collection spécifique.
+****
+
+
+== Méthodes pour la gestion des collections
+
+.db.collection.insertOne(document): 
+****
+Insère un seul document dans la collection.
+****
+
+.db.collection.insertMany([documents]): 
+****
+Insère plusieurs documents dans la collection.
+****
+
+.db.collection.find(query): 
+****
+Requête pour récupérer des documents qui correspondent au filtre donné.
+****
+
+
+.db.collection.findOne(query): 
+****
+Récupère un seul document qui correspond au filtre.
+****
+
+.db.collection.updateOne(filter, update): 
+****
+Met à jour un seul document qui correspond au filtre.
+****
+
+.db.collection.updateMany(filter, update): 
+****
+Met à jour tous les documents qui correspondent au filtre.
+****
+
+.db.collection.replaceOne(filter, replacement): 
+****
+Remplace un seul document qui correspond au filtre.
+****
+
+.db.collection.deleteOne(filter): 
+****
+Supprime un seul document qui correspond au filtre.
+****
+
+
+.db.collection.deleteMany(filter): 
+****
+Supprime tous les documents qui correspondent au filtre.
+****
+
+
+.db.collection.countDocuments(query): 
+****
+Compte le nombre de documents qui correspondent à une requête.
+****
+
+.db.collection.aggregate(pipeline): 
+****
+Exécute des agrégations sur la collection.
+****
+
+.db.collection.distinct(field, query): 
+****
+Récupère les valeurs distinctes d'un champ donné.
+****
+
+
+== Opérations d'indexation
+
+.db.collection.createIndex(keys, options): 
+****
+Crée un index sur un ou plusieurs champs de la collection.
+****
+
+.db.collection.dropIndex(indexName): 
+****
+Supprime un index spécifique d'une collection.
+****
+
+.db.collection.getIndexes(): 
+****
+Récupère tous les index de la collection.
+****
+
+
+== Méthodes pour la gestion des utilisateurs
+
+.db.createUser(user): 
+****
+Crée un nouvel utilisateur dans la base de données actuelle.
+****
+
+.db.dropUser(username): 
+****
+Supprime un utilisateur de la base de données actuelle.
+****
+
+.db.grantRolesToUser(username, roles): 
+****
+Accorde des rôles supplémentaires à un utilisateur.
+****
+
+.db.revokeRolesFromUser(username, roles): 
+****
+Révoque des rôles à un utilisateur.
+****
+
+
+== Méthodes pour les transactions
+
+.session.startTransaction(): 
+****
+Démarre une nouvelle transaction.
+****
+
+.session.commitTransaction(): 
+****
+Valide la transaction en cours.
+****
+
+.session.abortTransaction(): 
+****
+Annule la transaction en cours.
+****
+
+
+== Opérations administratives
+
+.db.adminCommand(command): 
+****
+Exécute une commande administrative sur la base de données actuelle.
+****
+
+.db.runCommand(command): 
+****
+Exécute une commande sur la base de données.
+****
+
+.db.currentOp(): 
+****
+Affiche les opérations en cours dans la base de données.
+****
+
+=== ...
+
+Ces méthodes permettent d'interagir avec les collections, documents et d'effectuer des opérations courantes sur une base de données MongoDB. 
+
+
+
+
+
+
+

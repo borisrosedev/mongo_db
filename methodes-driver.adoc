@@ -1,0 +1,221 @@
+= Les méthodes du driver officiel mongodb
+:revealjs_theme: beige
+:source-highlighter: highlight.js
+:icons: font
+
+== Introduction
+
+Lorsque vous travaillez avec MongoDB en Node.js via le pilote officiel mongodb, vous pouvez utiliser diverses méthodes JavaScript pour effectuer des opérations sur une base de données MongoDB.
+
+== Connexion à la base de données
+
+****
+* MongoClient.connect(url, options): Se connecte à une instance MongoDB.
+
+* client.db(dbName): Accède à une base de données spécifique après connexion.
+
+* client.close(): Ferme la connexion à MongoDB.
+****
+
+=== Exemple:
+
+[source, javascript]
+----
+const { MongoClient } = require('mongodb');
+const url = 'mongodb://localhost:27017';
+const client = new MongoClient(url);
+
+async function connect() {
+  try {
+    await client.connect();
+    console.log('Connected successfully to MongoDB');
+    const db = client.db('myDatabase');
+  } finally {
+    await client.close();
+  }
+}
+connect();
+----
+
+== Opérations CRUD (Create, Read, Update, Delete)
+
+=== Insertion
+
+****
+db.collection.insertOne(document): Insère un seul document dans une collection.
+db.collection.insertMany([documents]): Insère plusieurs documents dans une collection.
+****
+
+
+=== Exemple:
+
+[source, javascript]
+----
+const collection = db.collection('myCollection');
+const result = await collection.insertOne({ name: 'Alice', age: 25 });
+const results = await collection.insertMany([{ name: 'Bob' }, { name: 'Charlie' }]);
+----
+
+
+=== Lecture (Read)
+
+****
+db.collection.find(query): Trouve plusieurs documents correspondant à une requête.
+db.collection.findOne(query): Trouve un seul document correspondant à une requête.
+db.collection.find(query).toArray(): Retourne tous les documents correspondants sous forme de tableau.
+db.collection.find(query).limit(n): Limite le nombre de documents retournés.
+****
+
+
+=== Exemple:
+
+[source, javascript]
+----
+const documents = await collection.find({ age: { $gte: 20 } }).toArray();
+const singleDoc = await collection.findOne({ name: 'Alice' });
+----
+
+
+=== Mise à jour (Update)
+
+****
+db.collection.updateOne(filter, update): Met à jour un seul document.
+db.collection.updateMany(filter, update): Met à jour plusieurs documents.
+****
+
+
+=== Exemple:
+
+[source, javascript]
+----
+await collection.updateOne({ name: 'Alice' }, { $set: { age: 26 } });
+await collection.updateMany({ age: { $gte: 20 } }, { $inc: { age: 1 } });
+----
+
+
+
+=== Suppression (Delete)
+
+****
+db.collection.deleteOne(filter): Supprime un seul document.
+db.collection.deleteMany(filter): Supprime plusieurs documents.
+****
+
+=== Exemple:
+
+[source, javascript]
+----
+await collection.deleteOne({ name: 'Alice' });
+await collection.deleteMany({ age: { $gte: 30 } });
+----
+
+== Opérations sur les Index
+
+****
+db.collection.createIndex(keys, options): Crée un index.
+db.collection.dropIndex(indexName): Supprime un index.
+db.collection.indexes(): Liste tous les index de la collection.
+****
+
+
+=== Exemple:
+
+[source, javascript]
+----
+await collection.createIndex({ name: 1 });
+await collection.dropIndex('name_1');
+----
+
+
+== Opérations d'agrégation
+
+****
+db.collection.aggregate(pipeline): Exécute une requête d'agrégation.
+****
+
+
+=== Exemple:
+
+[source, javascript]
+----
+const pipeline = [
+  { $match: { age: { $gte: 20 } } },
+  { $group: { _id: null, avgAge: { $avg: '$age' } } }
+];
+
+
+const results = await collection.aggregate(pipeline).toArray();
+----
+
+
+
+== Transactions
+
+****
+client.startSession(): Démarre une session pour les transactions.
+session.startTransaction(): Démarre une nouvelle transaction.
+session.commitTransaction(): Valide la transaction.
+session.abortTransaction(): Annule la transaction.
+****
+
+=== Exemple:
+
+[source, javascript]
+----
+const session = client.startSession();
+session.startTransaction();
+try {
+  await collection.insertOne({ name: 'Transaction Test' }, { session });
+  await session.commitTransaction();
+} catch (error) {
+  await session.abortTransaction();
+} finally {
+  session.endSession();
+}
+----
+
+
+
+== Gestion des utilisateurs et des rôles
+
+****
+db.addUser(username, password, options): Ajoute un utilisateur à la base de données.
+db.removeUser(username): Supprime un utilisateur de la base de données.
+****
+
+== Opérations administratives
+
+****
+db.command({ command: ... }): Exécute une commande sur la base de données.
+****
+
+
+=== Exemple:
+
+[source, javascript]
+----
+const result = await db.command({ ping: 1 });
+console.log(result);
+----
+
+== Opérations diverses
+
+****
+db.collection.distinct(field, query): Retourne les valeurs distinctes d'un champ.
+db.collection.countDocuments(query): Compte le nombre de documents correspondant à une requête.
+****
+
+
+=== Exemple:
+
+[source, javascript]
+----
+const count = await collection.countDocuments({ age: { $gte: 18 } });
+const distinctNames = await collection.distinct('name');
+----
+
+
+
+
+
+

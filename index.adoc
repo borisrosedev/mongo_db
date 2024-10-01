@@ -1,0 +1,10 @@
+= Mongo DB
+:revealjs_theme: beige
+:source-highlighter: highlight.js
+:icons: font
+
+== Cours
+
+* link:./denormalisation.html[La dénormalisation]
+* link:./methodes.html[Liste des méthodes] JavaScript couramment utilisées pour effectuer des opérations sur une base de données MongoDB dans un environnement shell MongoDB
+* link:./methodes-driver.html[Les méthodes du driver officiel mongodb]
